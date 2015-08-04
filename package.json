@@ -1,24 +1,31 @@
 {
   "name": "gitevents-meetup",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "Meetup plugin for GitEvents",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Miz85/gitevents-meetup.git"
+    "url": "https://github.com/gitevents/gitevents-meetup.git"
   },
   "author": "Miz85",
+  "contributors": [
+    {
+      "name": "Patrick Heneise",
+      "email": "patrick@blended.io"
+    }
+  ],
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Miz85/gitevents-meetup/issues"
+    "url": "https://github.com/gitevents/gitevents-meetup/issues"
   },
-  "homepage": "https://github.com/Miz85/gitevents-meetup",
+  "homepage": "https://github.com/gitevents",
   "dependencies": {
-    "async": "^0.9.0",
-    "moment": "^2.9.0",
-    "request": "^2.51.0"
+    "async": "^1.4.0",
+    "meetup-api": "^0.1.25",
+    "moment": "^2.10.6",
+    "request": "^2.60.0"
   }
 }
