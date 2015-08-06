@@ -18,7 +18,7 @@ module.exports = function(config) {
           key: config.meetup.token
         });
 
-        debug('starting meetup process.');
+        debug('starting meetup plugin.');
         if (payload.type === 'proposal') {
           debug('proposal. do nothing for now.');
           // do nothing for now
@@ -26,15 +26,51 @@ module.exports = function(config) {
         }
 
         if (payload.type === 'event') {
-          debug('do something');
-          meetup.getEvents({
-            'group_urlname': config.meetup.groupname
-          }, function(error, response) {
-            if (!error) {
-              console.log(response);
+          var eventDescription = '';
+          payload.talks.forEach(function(talk) {
+            eventDescription += '<h2>' + talk.title + '</h2>';
+            eventDescription += '<span><em>by ' + talk.speaker.name + '</em></span><br />';
+            eventDescription += talk.description;
+
+            eventDescription += '<p>';
+            if (talk.language) {
+              eventDescription += '<br /><span><em>Language: ' + talk.language + '</em>';
             }
-            resolve(payload);
+
+            if (talk.level) {
+              eventDescription += '<br /<span><em>Level: ' + talk.level + '</em></span>';
+            }
+
+            if (config.url) {
+              eventDescription += '<br /><span><em><a href="' +
+                config.url + '/talks/' + talk.id +
+                '">View this talk on our website</span></em>';
+            }
+            eventDescription += '</p>';
           });
+
+          if (payload.meetup_id) {
+            debug('Updating meetup event.');
+            meetup.editEvent({});
+          } else {
+            debug('Creating meetup event.');
+            meetup.postEvent({
+              group_id: config.meetup.group_id,
+              name: payload.name,
+              description: eventDescription,
+              time: new Date(payload.date).getTime(),
+              duration: config.meetup.duration,
+              publish_status: 'draft',
+              venue_id: config.meetup.default_venue_id
+            }, function(error, response) {
+              console.log(error);
+              if (!error) {
+                console.log(error, response);
+                console.log(response.results);
+              }
+              resolve(payload);
+            });
+          }
         }
       }
     );
