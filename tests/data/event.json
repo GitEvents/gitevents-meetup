@@ -1,0 +1,39 @@
+{
+  "context": "http://schema.org",
+  "type": "Social event",
+  "location": {
+    "type": "Place",
+    "address": {
+      "type": "PostalAddress",
+      "addressLocality": " Barcelona",
+      "postalCode": " 08001",
+      "streetAddress": "C/ Fontella 2",
+      "name": "Mobile World Centre"
+    },
+    "url": "https://www.mobileworldcentre.com"
+  },
+  "url": "http://barcelonajs.org",
+  "duration": "PT2H",
+  "doorTime": "18:45",
+  "inLanguage": {
+    "type": "Language",
+    "name": "English"
+  },
+  "startDate": "2099-12-31T19:00:00Z",
+  "id": "20991231-barcelonajs-meetupcom",
+  "organizer": {
+    "type": "Organization",
+    "address": {
+      "type": "PostalAddress",
+      "addressLocality": "Barcelona, Spain",
+      "postalCode": "08003",
+      "streetAddress": "C/ Mare de Deu del Pilar 20"
+    },
+    "email": "hola(at)barcelonajs.org",
+    "name": "BarcelonaJS",
+    "url": "http://barcelonajs.org"
+  },
+  "github": "https://api.github.com/repos/GiteventsPlayground/planning/issues/11",
+  "url": "/event/20991231-barcelonajs-meetupcom.html",
+  "name": "BarcelonaJS Meetup.com"
+}

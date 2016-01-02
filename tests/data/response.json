@@ -1,0 +1,32 @@
+{
+  "utc_offset": 3600000,
+  "headcount": 0,
+  "visibility": "public",
+  "waitlist_count": 0,
+  "created": 1451769572703,
+  "maybe_rsvp_count": 0,
+  "description": "<p>More info coming soon ...</p>",
+  "event_url": "http://www.meetup.com/BarcelonaJS/events/227786950/",
+  "yes_rsvp_count": 1,
+  "announced": false,
+  "name": "BarcelonaJS Meetup.com",
+  "id": "227786950",
+  "time": 4102425900000,
+  "updated": 1451769572703,
+  "group": {
+    "join_mode": "open",
+    "created": 1417712144000,
+    "name": "BarcelonaJS",
+    "group_lon": 2.1700000762939453,
+    "id": 18232090,
+    "urlname": "BarcelonaJS",
+    "group_lat": 41.400001525878906,
+    "who": "JavaScripters"
+  },
+  "status": "upcoming",
+  "ratelimit": {
+    "limit": "30",
+    "remaining": "29",
+    "reset": "10"
+  }
+}
