@@ -1,78 +1,67 @@
-var
-  debug = require('debug')('gitevents-meetup');
+var debug = require('debug')('gitevents-meetup');
+var moment = require('moment');
+var meetup = {};
+var config;
 
-module.exports = function(config) {
-  if (!config) {
+meetup.init = function(cfg) {
+  if (!cfg) {
     return new Error('No configuration found');
+  } else {
+    config = cfg;
   }
-
-  return function process(payload) {
-    return new Promise(
-      function(resolve, reject) {
-        if (!config.meetup) {
-          debug('GitEvents meetup.com plugin is not activated. Please provide an API key.');
-          reject(new Error('no api key'));
-        }
-
-        var meetup = require('meetup-api')({
-          key: config.meetup.token
-        });
-
-        debug('starting meetup plugin.');
-        if (payload.type === 'proposal') {
-          debug('proposal. do nothing for now.');
-          // do nothing for now
-          resolve();
-        }
-
-        if (payload.type === 'event') {
-          var eventDescription = '';
-          payload.talks.forEach(function(talk) {
-            eventDescription += '<h2>' + talk.title + '</h2>';
-            eventDescription += '<span><em>by ' + talk.speaker.name + '</em></span><br />';
-            eventDescription += talk.description;
-
-            eventDescription += '<p>';
-            if (talk.language) {
-              eventDescription += '<br /><span><em>Language: ' + talk.language + '</em>';
-            }
-
-            if (talk.level) {
-              eventDescription += '<br /<span><em>Level: ' + talk.level + '</em></span>';
-            }
-
-            if (config.url) {
-              eventDescription += '<br /><span><em><a href="' +
-                config.url + '/talks/' + talk.id +
-                '">View this talk on our website</span></em>';
-            }
-            eventDescription += '</p>';
-          });
-
-          if (payload.meetup_id) {
-            debug('Updating meetup event.');
-            meetup.editEvent({});
-          } else {
-            debug('Creating meetup event.');
-            meetup.postEvent({
-              group_id: config.meetup.group_id,
-              name: payload.name,
-              description: eventDescription,
-              time: new Date(payload.date).getTime(),
-              duration: config.meetup.duration,
-              publish_status: 'draft',
-              venue_id: config.meetup.default_venue_id
-            }, function(error, response) {
-              console.log(error);
-              if (!error) {
-                console.log(error, response);
-                console.log(response.results);
-              }
-              resolve(payload);
-            });
-          }
-        }
-      }
-    );
-  };
 };
+
+meetup.create = function create(event) {
+  return new Promise(function(resolve, reject) {
+    if (!config.plugins.meetup) {
+      debug('GitEvents meetup.com plugin is not activated. Please provide an API key.');
+      reject(new Error('no api key'));
+    }
+
+    var meetup = require('meetup-api')({
+      key: config.plugins.meetup.apikey
+    });
+
+    if (config.plugins.meetup.enabled === true) {
+      debug('create');
+
+      var doorTime = moment(event.startDate, 'YYYY-MM-DDTHH:mm:ss');
+      var startTime = moment(event.startDate, 'YYYY-MM-DDTHH:mm:ss');
+      doorTime.hour(event.doorTime.split(':')[0]);
+      doorTime.minute(event.doorTime.split(':')[1]);
+      var differenceDoorStartTime = startTime.diff(doorTime);
+
+      var duration = moment.duration(event.duration);
+      duration.add(differenceDoorStartTime);
+      var meetupVenueId;
+
+      if (event.meetupVenueId) {
+        meetupVenueId = event.meetupVenueId;
+      } else {
+        meetupVenueId = config.plugins.meetup.default_venue_id;
+      }
+
+      meetup.postEvent({
+        group_id: config.plugins.meetup.group_id,
+        name: event.name,
+        venue_visibility: 'public',
+        hosts: config.plugins.meetup.hosts.join(','),
+        group_urlname: event.organizer.url,
+        simple_html_description: config.plugins.meetup.simple_html_description,
+        time: doorTime.valueOf(),
+        duration: duration.asMilliseconds(),
+        publish_status: 'published',
+        venue_id: meetupVenueId
+      }, function(error, response) {
+        if (error) {
+          return reject(error);
+        }
+        return resolve(response.id);
+      });
+    } else {
+      return resolve('meetup plugin is disabeld.');
+    }
+  });
+};
+
+module.exports = exports = meetup;
