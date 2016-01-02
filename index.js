@@ -13,6 +13,8 @@ meetup.init = function(cfg) {
 
 meetup.create = function create(event) {
   return new Promise(function(resolve, reject) {
+    debug('create');
+
     if (!config.plugins.meetup) {
       debug('GitEvents meetup.com plugin is not activated. Please provide an API key.');
       reject(new Error('no api key'));
@@ -23,7 +25,7 @@ meetup.create = function create(event) {
     });
 
     if (config.plugins.meetup.enabled === true) {
-      debug('create');
+      debug('plugin enabled. Proceeding.');
 
       var doorTime = moment(event.startDate, 'YYYY-MM-DDTHH:mm:ss');
       var startTime = moment(event.startDate, 'YYYY-MM-DDTHH:mm:ss');
@@ -53,12 +55,15 @@ meetup.create = function create(event) {
         publish_status: 'published',
         venue_id: meetupVenueId
       }, function(error, response) {
+        debug('Meetup:postEvent()');
         if (error) {
+          debug(error);
           return reject(error);
         }
         return resolve(response.id);
       });
     } else {
+      debug('plugin disabled. Exiting.');
       return resolve('meetup plugin is disabeld.');
     }
   });
