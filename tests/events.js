@@ -61,41 +61,13 @@ test('create() should create an event on meetup.com', assert => {
 
 test('getRsvps() should return a list of attendees from meetup.com', assert => {
   var config = require('../common/config');
+  var rsvps = require('./data/rsvps');
   meetup.init(config);
 
   var mockError = null;
-  var mockResponse = {
-    results: [
-      {
-        created: 1449151202000,
-        response: 'no',
-        guests: 0,
-        member: {
-          member_id: 123,
-          name: 'Foo Bar'
-        },
-        rsvp_id: 123123,
-        mtime: 1449685902000,
-        event: {
-          name: 'Some event',
-          id: '1212121212',
-          time: 1454446800000,
-          event_url: 'http://www.meetup.com/Test-Group/events/1212121212/'
-        },
-        group: {
-          join_mode: 'open',
-          created: 1453211766856,
-          group_lon: -2.393,
-          id: 987987,
-          urlname: 'Test-Group',
-          group_lat: 5.102
-        }
-      }
-    ]
-  };
 
   var getRSVPsStub = sinon.stub(meetup.meetup, 'getRSVPs');
-  getRSVPsStub.callsArgWith(1, mockError, mockResponse);
+  getRSVPsStub.callsArgWith(1, mockError, rsvps);
 
   meetup.getRSVPs('123').then((rsvps) => {
     assert.equal(rsvps.length, 1, 'returned answers are returned');
