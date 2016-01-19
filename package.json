@@ -32,6 +32,7 @@
   },
   "devDependencies": {
     "nock": "^3.6.0",
+    "sinon": "^1.17.2",
     "tape": "^4.4.0"
   }
 }
