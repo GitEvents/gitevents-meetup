@@ -1,5 +1,4 @@
 var test = require('tape');
-var nock = require('nock');
 var sinon = require('sinon');
 var meetup = require('../index');
 
